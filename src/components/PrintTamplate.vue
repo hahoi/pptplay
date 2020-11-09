@@ -268,7 +268,7 @@ export default {
   font-size: 22px;
   text-align: center;
   /* vertical-align: sub; */
-  writing-mode: vertical-rl;
+  writing-mode: vertical-lr;
   /* letter-spacing: 5px; */
 }
 .schedule {
@@ -428,7 +428,7 @@ export default {
   align-items: center;
   align-content: center;
   height: 100%;
-  line-height: 1.3em;
+  line-height: 1.6em;
 }
 .item2 {
   flex: auto;

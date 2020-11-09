@@ -198,7 +198,7 @@
 
       <!-- 放大照片 -->
     <q-dialog v-model="showPhoto" :maximized="true">
-      <q-card>
+      <q-card >
         <q-card-section class="row items-center q-py-none bg-grey-5">
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
@@ -281,15 +281,19 @@ export default {
 .title {
   grid-column-start: 1;
   grid-column-end: 25;
-  font-size: 3em;
+  font-size: 2.5em;
 }
-.progress {
+/*檢核點*/
+.progress { 
   font-size: 26px;
   text-align: center;
   /* vertical-align: sub; */
-  writing-mode: vertical-rl;
+  writing-mode: vertical-lr;
+  
   /* letter-spacing: 5px; */
 }
+
+/*日期*/
 .schedule {
   /* text-align: center; */
   /* vertical-align: justify; */
@@ -441,7 +445,7 @@ export default {
   align-items: center;
   align-content: center;
   height: 100%;
-  line-height: 1.3em;
+  line-height: 1.8em;
 }
 .item2 {
   flex: auto;

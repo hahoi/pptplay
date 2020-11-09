@@ -90,11 +90,11 @@ export default {
         orderNumber: "",
         title: this.title,
         image: {
-          img1: {},
-          img2: {},
+          img1: {linkURL:""},
+          img2: {linkURL:""},
         },
         step1: {
-          text: "啟動",
+          text: "計畫",
           progress1: "計畫核定",
           schedule1: "",
         },
