@@ -37,21 +37,21 @@
       </q-page-sticky>
 
       <q-page-sticky position="bottom">
-        <!-- <q-btn
+        <q-btn
           round
           color="grey"
           icon="menu"
           size="10px"
-          @click="indexMenu"
-        /> -->
-        <q-fab color="grey" direction="up" class="q-fab-mini">
+          @click="FunMmenuDialog = true"
+        />
+        <!-- <q-fab color="grey" direction="up" class="q-fab-mini">
           <q-fab-action color="primary" @click="indexMenu" />
           <q-fab-action color="secondary" @click="dowork" />
           <q-fab-action
             color="accent"
             @click="ImportantCaseMenuDialog = true"
           />
-        </q-fab>
+        </q-fab> -->
       </q-page-sticky>
 
       <q-page-sticky position="bottom-right">
@@ -206,9 +206,59 @@
         <q-card-section>
           <important-case-menu></important-case-menu>
         </q-card-section>
+        <q-card-actions align="right">
+          <q-btn label="關閉" v-close-popup class="text-h6" />
+        </q-card-actions>
       </q-card>
     </q-dialog>
 
+    <!-- 功能表視窗 -->
+    <q-dialog v-model="FunMmenuDialog" position="bottom" v-if="Authority">
+      <q-card style="min-width: 300px">
+        <q-card-section>
+          <div class="text-h6">功能選擇：</div>
+        </q-card-section>
+
+        <q-card-actions align="center" class="text-primary">
+          <div class="column items-center">
+            <q-btn-group push>
+              <q-btn
+                push
+                color="orange"
+                text-color="black"
+                label="總表編輯"
+                icon="timeline"
+                @click="
+                  ImportantCaseMenuDialog = true;
+                  FunMmenuDialog = false;
+                "
+                class="text-h6"
+              />
+              <q-btn
+                push
+                color="amber"
+                text-color="black"
+                label="編輯目前案件"
+                icon="edit"
+                class="text-h6"
+                @click="dowork"
+              />
+              <q-btn
+                push
+                color="yellow"
+                text-color="black"
+                label="選擇投影片"
+                icon="done"
+                class="text-h6"
+                @click="indexMenu"
+              />
+            </q-btn-group>
+
+            <q-btn flat label="關閉" v-close-popup class="text-h6" />
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -216,15 +266,18 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { LocalStorage, Loading } from "quasar";
 import { deepCopy } from "src/utils/function-tree";
+import { dbFirestore } from 'boot/firebase'
 export default {
   name: "",
   data() {
     return {
+      Authority: false,
       cIndex: 0,
       currentData: {}, //一頁投影片的資料
       prevbtn: false,
       data: [], //全部的資料
       menuDialog: false,
+      FunMmenuDialog: true,
       item: {},
 
       dialog: false,
@@ -232,6 +285,8 @@ export default {
       copyData: {},
 
       ImportantCaseMenuDialog: false,
+
+      inpswd: "",
     };
   },
   components: {
@@ -240,10 +295,11 @@ export default {
     ImportantCaseMenu: require("components/ImportantCaseMenu.vue").default,
     SupMeetingSelect: require("components/SupMeetingSelect.vue").default,
   },
-  created() {},
+  created() {
+    this.checkPswd()
+  },
   mounted() {
     // console.log(this.ImportantCase);
-    // this.currentData = this.data[this.cIndex];
 
     this.getData();
 
@@ -265,6 +321,33 @@ export default {
   methods: {
     ...mapMutations("ImportantCase", ["setCurrentMeeting"]),
     ...mapActions("ImportantCase", ["fbReadDataImportantCase"]),
+    async checkPswd() {
+      let rdpswd = await this.RdPassword();
+      console.log(rdpswd);
+      this.$q
+        .dialog({
+          title: "輸入編輯密碼",
+          // message: '輸入編輯密碼',
+          prompt: {
+            inpswd: "",
+            type: "text", // optional
+          },
+          cancel: true,
+          persistent: true,
+        })
+        .onOk((data) => {
+          // console.log('>>>> OK, received',rdpswd, data)
+          if(rdpswd == data){
+              this.Authority = true
+          }
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+    },
 
     async getData() {
       let currentMeeting = await LocalStorage.getItem("currentMeeting");
@@ -272,8 +355,22 @@ export default {
       await this.fbReadDataImportantCase();
       await setTimeout(() => {
         this.currentData = this.ImportantCaseSorted[0];
-        console.log(this.ImportantCaseSorted);
+        // console.log(this.ImportantCaseSorted);
       }, 2000);
+    },
+    RdPassword() {
+      return dbFirestore
+        .collection("主管會報Setting")
+        .doc("Edit")
+        .get()
+        .then((doc) => {
+          // console.log(doc.data())
+          return doc.data().password;
+        })
+        .catch((err) => {
+          // showErrorMessage(err.message)
+          console.error("主管會報Seting資料庫讀取失敗！", error);
+        });
     },
     next() {
       this.prevbtn = false;
@@ -308,6 +405,7 @@ export default {
     },
     indexMenu() {
       this.menuDialog = true;
+      this.FunMmenuDialog = false;
     },
     goIndex(index) {
       this.menuDialog = false;
@@ -321,6 +419,8 @@ export default {
       // // this.currentData = this.ImportantCaseSorted[index];
       this.dialog = true;
       this.copyData = deepCopy(this.currentData);
+
+      this.FunMmenuDialog = false;
     },
     renew() {
       this.currentData = this.ImportantCaseSorted[this.cIndex];
