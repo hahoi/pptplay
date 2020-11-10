@@ -6,6 +6,22 @@
   印表強迫換頁，{page-break-after: always}
   -->
   <div style="width: 978px; margin: auto">
+
+
+    <!-- <q-card class="my-card" flat bordered>
+      <q-card-section horizontal>
+        <q-img
+          class="col"
+          src="~assets/printSetting.png"
+          style="max-width: 300px"
+        />
+        <p class="q-mt-xl text-h6"><= 列印設定</p>
+
+        <q-card-actions vertical class="justify-around q-px-md">
+          <q-btn v-print="'#printContent'" label="列印" size="xl" color="primary"/>
+        </q-card-actions>
+      </q-card-section>
+    </q-card> -->
     <!-- <q-btn v-print="'#printContent'" label="列印" size="xl" /> -->
     <div ref="ppt" id="printContent" v-for="item in ImportantCaseSorted">
       <print-tamplate :data="item"></print-tamplate>
@@ -18,6 +34,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { LocalStorage, Loading } from "quasar";
 import { deepCopy } from "src/utils/function-tree";
+import { dbFirestore } from 'boot/firebase'
 export default {
   name: "",
   data() {
@@ -50,13 +67,28 @@ export default {
     ...mapActions("ImportantCase", ["fbReadDataImportantCase"]),
 
     async getData() {
+      // let currentMeeting = await this.RDcurrentMeeting()
       let currentMeeting = await LocalStorage.getItem("currentMeeting");
       await this.setCurrentMeeting(currentMeeting);
       await this.fbReadDataImportantCase();
       await setTimeout(() => {
         this.currentData = this.ImportantCaseSorted[0];
-        console.log(this.ImportantCaseSorted);
+        // console.log(this.ImportantCaseSorted);
       }, 2000);
+    },
+    RDcurrentMeeting() {
+      return dbFirestore
+        .collection("主管會報Setting")
+        .doc("currentMeeting")
+        .get()
+        .then((doc) => {         
+            // console.log(doc.data())
+            return doc.data().currentMeeting
+        })
+        .catch((err) => {
+          // showErrorMessage(err.message)
+          console.error("主管會報Seting資料庫讀取失敗！", error);
+        });
     },
     next() {
       this.prevbtn = false;

@@ -33,4 +33,5 @@ yarn-error.log*
 *.sln
 
 # .firebase
+.firebase
 *.cache
