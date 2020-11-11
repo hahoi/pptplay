@@ -266,7 +266,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { LocalStorage, Loading } from "quasar";
 import { deepCopy } from "src/utils/function-tree";
-import { dbFirestore } from 'boot/firebase'
+import { firebaseAuth, dbFirestore } from "boot/firebase";
 export default {
   name: "",
   data() {
@@ -296,7 +296,7 @@ export default {
     SupMeetingSelect: require("components/SupMeetingSelect.vue").default,
   },
   created() {
-    this.checkPswd()
+    this.checkPswd();
   },
   mounted() {
     // console.log(this.ImportantCase);
@@ -323,7 +323,7 @@ export default {
     ...mapActions("ImportantCase", ["fbReadDataImportantCase"]),
     async checkPswd() {
       let rdpswd = await this.RdPassword();
-      console.log(rdpswd);
+      // console.log(rdpswd);
       this.$q
         .dialog({
           title: "輸入編輯密碼",
@@ -337,8 +337,9 @@ export default {
         })
         .onOk((data) => {
           // console.log('>>>> OK, received',rdpswd, data)
-          if(rdpswd == data){
-              this.Authority = true
+          if (rdpswd == data) {
+            this.Authority = true;
+            //write: if request.auth.uid != null; //需要認證
           }
         })
         .onCancel(() => {
