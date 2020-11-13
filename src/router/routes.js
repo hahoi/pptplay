@@ -19,6 +19,9 @@ const routes = [
       { 
         path: 'PptPrint', component: () => import('pages/PptPrint.vue') 
       },
+      { 
+        path: 'StorageList', component: () => import('pages/StorageList.vue') 
+      },
     ]
   },
 

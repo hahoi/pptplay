@@ -90,8 +90,8 @@ export default {
         orderNumber: "",
         title: this.title,
         image: {
-          img1: {linkURL:""},
-          img2: {linkURL:""},
+          img1: {findKey: "" ,linkURL:""},
+          img2: {findKey: "" ,linkURL:""},
         },
         step1: {
           text: "計畫",

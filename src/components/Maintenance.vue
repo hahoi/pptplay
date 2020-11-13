@@ -38,6 +38,38 @@
                 <q-space></q-space>
                 <q-uploader :factory="factoryFn2" style="max-width: 250px" />
               </div>
+              <div
+                class="fit row wrap justify-start items-start content-start q-gutter-md q-ma-md text-black"
+              >
+                <!-- {{data.id}}<br/>
+              {{data.image.img1.findKey.split("/")[3]}}<br/> -->
+                <div v-if="data.id !== data.image.img1.findKey.split('/')[3]">
+                  檔案是拷貝的，檔案若要獨立，請重新上傳。
+                </div>
+                <div>
+                  <img
+                    :src="data.image.img1.linkURL"
+                    style="height: 100px; max-width: 100px; overflow: auto"
+                  />
+                  <img
+                    :src="data.image.img2.linkURL"
+                    style="height: 100px; max-width: 100px; overflow: auto"
+                  />
+                </div>
+                <q-separator />
+                <div v-for="(url, key) in allFileUrl">
+                  <!-- {{url.url}} -->
+                  <span @click="delImg(url.file, key)">
+                    <q-icon name="delete" color="black" /><q-icon
+                      name="close"
+                      color="black" /></span
+                  ><br />
+                  <img
+                    :src="url.url"
+                    style="height: 100px; max-width: 100px; overflow: auto"
+                  />
+                </div>
+              </div>
             </q-tab-panel>
             <q-tab-panel name="step1">
               <div class="q-gutter-md row items-start q-mb-xl">
@@ -146,9 +178,14 @@
               </div>
             </q-tab-panel>
             <q-tab-panel name="situation">
-              <p class="text-black text-body2">文字不要超過5行，每行不要超過45個字。</p>
-              <q-editor v-model="data.situation" max-height="5rem" 
-            class="text-black"/>
+              <p class="text-black text-body2">
+                文字不要超過5行，每行不要超過45個字。
+              </p>
+              <q-editor
+                v-model="data.situation"
+                max-height="5rem"
+                class="text-black"
+              />
             </q-tab-panel>
           </q-tab-panels>
           <q-card-section>
@@ -181,11 +218,14 @@ export default {
   data() {
     return {
       tab: "title", // tab 預設顯示
+      allFileUrl: [],
     };
   },
   components: {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.listAllFile();
+  },
   watch: {},
   computed: {},
   methods: {
@@ -273,7 +313,110 @@ export default {
         }
       );
     },
-  },
+    delImg(findKey, key) {
+      let vm = this;
+
+      this.$q
+        .dialog({
+          title: "刪除確認",
+          message: `要刪除這張照片嗎？`,
+          cancel: true,
+          persistent: true,
+        })
+        .onOk(() => {
+          this.$q
+            .dialog({
+              title: "警告",
+              message: "再次確認？",
+              cancel: true,
+            })
+            .onOk(() => {
+              // console.log(vm.data.id, vm.data.title);
+              // console.log(findKey, key, vm.allFileUrl);
+              console.log(vm.allFileUrl[key].file.split("/")[3]);
+              console.log(vm.data.image.img1.findKey.split("/")[4]);
+              console.log(vm.data.image.img2.findKey.split("/")[4]);
+
+              let attr = vm.allFileUrl[key].file.split("/")[3];
+              let attr1 = vm.data.image.img1.findKey.split("/")[4];
+              let attr2 = vm.data.image.img2.findKey.split("/")[4];
+
+              //從遠端儲存空間刪除
+              let uploadTask = dbStorage.ref().child(findKey).delete();
+
+              //刪除photo陣列中的刪除項目
+              vm.allFileUrl.splice(key, 1);
+
+              //更新資料庫中 image 屬性
+              let att = {
+                linkURL: "",
+                findKey: "",
+              };
+              if (attr == attr1) {
+                console.log("img1");
+                vm.data.image.img1 = attr;
+                console.log(vm.data);
+                vm.updateImportantCase(vm.data);
+              }
+              if (attr == attr2) {
+                console.log("img2");
+                vm.data.image.img2 = att;
+                console.log(vm.data);
+                vm.updateImportantCase(vm.data);
+              }
+              
+            });
+        });
+    },
+
+    listAllFile() {
+      const currentMeeting = LocalStorage.getItem("currentMeeting");
+      const findKey = "/主管會報/" + currentMeeting + "/" + this.data.id;
+      this.listFile(findKey);
+    },
+    listFile(findKey) {
+      let vm = this;
+      // Create a reference under which you want to
+      // console.log(findKey)
+      if (!findKey) {
+        return;
+      }
+      var listRef = dbStorage.ref().child(findKey);
+
+      // Find all the prefixes and items.
+      listRef
+        .listAll()
+        .then(function (res) {
+          res.prefixes.forEach(function (folderRef) {
+            // 這個目錄底下的目錄（foreach 列出全部）
+            // console.log(folderRef.fullPath)
+            // vm.allPath.push(folderRef.fullPath);
+            // 用遞迴的方式列出全部目錄及檔案
+            vm.listFile(folderRef.fullPath);
+          });
+          res.items.forEach(function (itemRef) {
+            // 這個目錄下的檔案（foreach 列出全部）
+            // console.log(itemRef.fullPath);
+            // vm.allFile.push(itemRef.fullPath);
+
+            const fileRef = dbStorage.ref(itemRef.fullPath);
+            // .ref() 指向已存在 storage 中的檔案位置後 可以透過 getDownloadURL 取得連結
+            fileRef.getDownloadURL().then(function (url) {
+              // console.log(url);
+              vm.allFileUrl.push({
+                file: itemRef.fullPath,
+                url: url,
+              });
+            });
+            // console.log(vm.allFileUrl);
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+          // Uh-oh, an error occurred!
+        });
+    },
+  }, //methods
 };
 </script>
 
