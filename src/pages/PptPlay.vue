@@ -99,13 +99,16 @@ export default {
     ...mapActions("ImportantCase", ["fbReadDataImportantCase"]),
 
     async getData() {
-      let currentMeeting = await this.RDcurrentMeeting()
+      // let currentMeeting = await this.RDcurrentMeeting()
+      // await this.setCurrentMeeting(currentMeeting);
+      let currentMeeting = await LocalStorage.getItem("currentMeeting");
       await this.setCurrentMeeting(currentMeeting);
+
       await this.fbReadDataImportantCase();
       await setTimeout(() => {
         this.currentData = this.ImportantCaseSorted[0];
         // console.log(this.ImportantCaseSorted);
-      }, 1000);
+      }, 2000);
     },
     next() {
       this.prevbtn = false;

@@ -1,9 +1,9 @@
 <template>
 <div>
   <!-- {{data}}  height: 649px; -->
-  <div class="important" style="width: 978px; ">
-    <div class="grid-container">
-      <div class="title" v-html="`${data.orderNumber}.${data.title}`"></div>
+  <div class="importantPrint" style="width: 978px; ">
+    <div class="grid-container-print">
+      <div class="ptitle" v-html="`${data.orderNumber}.${data.title}`"></div>
       <div class="image1">
         <q-img
           :src="data.image.img1.linkURL"
@@ -19,172 +19,172 @@
         />
       </div>
 
-      <div class="step step1" v-html="data.step1.text"></div>
-      <div class="step step2" v-html="data.step2.text"></div>
-      <div class="step step3" v-html="data.step3.text"></div>
-      <div class="step step4" v-html="data.step4.text"></div>
-      <div class="step step5" v-html="data.step5.text"></div>
+      <div class="pstep step1" v-html="data.step1.text"></div>
+      <div class="pstep step2" v-html="data.step2.text"></div>
+      <div class="pstep step3" v-html="data.step3.text"></div>
+      <div class="pstep step4" v-html="data.step4.text"></div>
+      <div class="pstep step5" v-html="data.step5.text"></div>
 
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step1.progress1"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step1.progress1"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step1.schedule1)"></div>
-          <div class="item2"></div>
-        </div>
-      </div>
-
-      <div class="grid-item">
-        <div class="item1 leftLine">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step2.progress1"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step2.schedule1)"></div>
-          <div class="item2"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step2.progress2"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step2.schedule2)"></div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step1.schedule1)"></div>
+          <div class="pitem2"></div>
         </div>
       </div>
 
-      <div class="grid-item">
-        <div class="item1 leftLine">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step3.progress1">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1 leftLine">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step2.progress1"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step3.schedule1)">1</div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step2.schedule1)"></div>
+          <div class="pitem2"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step3.progress2">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step2.progress2"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step3.schedule2)">1</div>
-          <div class="item2"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step3.progress3">2</div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step3.schedule3)">1</div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step2.schedule2)"></div>
+          <div class="pitem2"></div>
         </div>
       </div>
 
-      <div class="grid-item">
-        <div class="item1 leftLine">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step4.progress1">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1 leftLine">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step3.progress1">2</div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step4.schedule1)">1</div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step3.schedule1)">1</div>
+          <div class="pitem2"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step4.progress2">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step3.progress2">2</div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step4.schedule2)">1</div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step3.schedule2)">1</div>
+          <div class="pitem2"></div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step4.progress3">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step3.progress3">2</div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step4.schedule3)">1</div>
-          <div class="item2"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step4.progress4">2</div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step4.schedule4)">1</div>
-          <div class="item2"></div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step4.progress5">2</div>
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step4.schedule5)">1</div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step3.schedule3)">1</div>
+          <div class="pitem2"></div>
         </div>
       </div>
 
-      <div class="grid-item">
-        <div class="item1 leftLine">
-          <div class="item2"></div>
-          <div class="item2 progress" v-html="data.step5.progress1">2</div>
+      <div class="grid-item-print">
+        <div class="pitem1 leftLine">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step4.progress1">2</div>
         </div>
       </div>
-      <div class="grid-item">
-        <div class="item1">
-          <div class="item2 schedule" v-html="df(data.step5.schedule1)"></div>
-          <div class="item2"></div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step4.schedule1)">1</div>
+          <div class="pitem2"></div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step4.progress2">2</div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step4.schedule2)">1</div>
+          <div class="pitem2"></div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step4.progress3">2</div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step4.schedule3)">1</div>
+          <div class="pitem2"></div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step4.progress4">2</div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step4.schedule4)">1</div>
+          <div class="pitem2"></div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step4.progress5">2</div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step4.schedule5)">1</div>
+          <div class="pitem2"></div>
         </div>
       </div>
 
-      <div class="plan">
+      <div class="grid-item-print">
+        <div class="pitem1 leftLine">
+          <div class="pitem2"></div>
+          <div class="pitem2 progress-print" v-html="data.step5.progress1">2</div>
+        </div>
+      </div>
+      <div class="grid-item-print">
+        <div class="pitem1">
+          <div class="pitem2 schedule-print" v-html="df(data.step5.schedule1)"></div>
+          <div class="pitem2"></div>
+        </div>
+      </div>
+
+      <div class="plan-print">
         <div
-          class="planBar"
+          class="planBar-print"
           :style="{width: data.plan.width + '%'}"
           v-html="`${data.plan.text}　${data.plan.percent}`"
         ></div>
       </div>
 
-      <div class="Actual">
+      <div class="Actual-print">
         <div
-          class="ActualBar"
+          class="ActualBar-print"
           :style="{width: data.Actual.width + '%'}"
           v-html="`${data.Actual.text}　${data.Actual.percent}`"
         ></div>
@@ -229,12 +229,12 @@ export default {
   margin: 0px;
   padding: 0px;
 }
-.important {
+.importantPrint {
   text-align: center;
   /* vertical-align: middle; */
   /* height:100%; */
 }
-.grid-container {
+.grid-container-print {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
   /* justify-content: space-between; */
@@ -248,7 +248,7 @@ export default {
   margin: 5px;
 }
 
-.grid-item {
+.grid-item-print {
   /* background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
  */
@@ -259,19 +259,19 @@ export default {
   /* justify-content: center; */
 }
 
-.title {
+.ptitle {
   grid-column-start: 1;
   grid-column-end: 25;
   font-size: 2em;
 }
-.progress {
+.progress-print {
   font-size: 22px;
   text-align: center;
   /* vertical-align: sub; */
   writing-mode: vertical-lr;
   /* letter-spacing: 5px; */
 }
-.schedule {
+.schedule-print {
   /* text-align: center; */
   /* vertical-align: justify; */
 
@@ -297,7 +297,7 @@ export default {
   /* grid-column: 13 / 24; */
 }
 
-.step {
+.pstep {
   font-size: 20px;
 }
 .step1 {
@@ -363,12 +363,12 @@ export default {
 .leftLine {
   border-left: 1px solid rgba(133, 135, 136, 0.8);
 }
-.plan {
+.plan-print {
   grid-column: 1 / 25;
   display: flex;
   align-items: flex-end;
 }
-.planBar {
+.planBar-print {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -385,7 +385,7 @@ export default {
   color: white;
   text-shadow: 2px 2px 2px #000000;
 }
-.Actual {
+.Actual-print {
   grid-column: 1 / 25;
   display: flex;
   /* flex-direction: row; */
@@ -394,10 +394,10 @@ export default {
   align-items: center;
   /* align-content: center; */
 }
-.Actual .memo {
+.Actual-print .memo {
   font-size: 1.2em;
 }
-.ActualBar {
+.ActualBar-print {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -420,7 +420,7 @@ export default {
   font-size: 1.2em;
 }
 
-.item1 {
+.pitem1 {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -430,7 +430,7 @@ export default {
   height: 100%;
   line-height: 1.6em;
 }
-.item2 {
+.pitem2 {
   flex: auto;
 }
 </style>

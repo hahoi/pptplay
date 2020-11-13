@@ -1,7 +1,7 @@
 <template>
   <q-page style="max-width: 600px; margin: auto">
     <div class="q-ma-md q-gutter-md column">
-      <q-card class="my-card col-4">
+      <!-- <q-card class="my-card col-4">
         <q-card-section class="bg-secondary text-white">
           <div class="text-h6">內容維護</div>
         </q-card-section>
@@ -35,11 +35,11 @@
             </q-btn>
           </div>
         </q-card-section>
-      </q-card>
+      </q-card> -->
 
       <q-card class="my-card col-4">
-        <q-card-section class="bg-purple text-white">
-          <div class="text-h6">簡報</div>
+        <q-card-section class="bg-secondary text-white">
+          <div class="text-h6">主管會報列管重要案件報告</div>
         </q-card-section>
 
         <q-separator />
@@ -53,8 +53,12 @@
               label="選擇："
             />
           </div>
+          <div class="col-3">
+            <q-radio v-model="playModel" val="play" label="播放" />
+            <q-radio v-model="playModel" val="print" label="列印" />
+          </div>
           <div class="q-ma-md">
-            <q-btn color="deep-orange" @click="pptPlay">GO</q-btn>
+            <q-btn color="deep-orange" @click="go">開始</q-btn>
           </div>
         </q-card-section>
       </q-card>
@@ -65,7 +69,7 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { LocalStorage, Loading, openURL } from "quasar";
-
+import { dbFirestore } from "boot/firebase";
 export default {
   name: "PageIndex",
   data() {
@@ -73,85 +77,74 @@ export default {
       model: "18屆?次主管會報",
       selected: "",
       options: [],
+      playModel: "",
     };
   },
   mounted() {
-    this.ReadSupervisorMeeting();
+    this.getData();
   },
   computed: {
     ...mapGetters("SupMeeting", ["SupervisorMeetingSort"]),
+    ...mapState("SupMeeting", ["CurrentMeeting"]),
+    ...mapState("ImportantCase", ["currentMeeting"]),
   },
   methods: {
     ...mapMutations("ImportantCase", ["setCurrentMeeting"]),
-    ...mapActions("SupMeeting", [
-      "ReadSupervisorMeeting",
-      "addSupervisorMeeting",
-      "deleteSupervisorMeeting",
-    ]),
-    editImportantCase() {
+    ...mapActions("SupMeeting", ["ReadSupervisorMeeting"]),
+    async getData() {
+      // this.ReadSupervisorMeeting();
+      this.selected = await this.RDcurrentMeeting();
+    },
+
+    go() {
+      if (this.selected === "" || this.playModel === "") {
+        this.$q
+          .dialog({
+            title: "請選擇主管會報及模式",
+          })
+          .onOk(() => {
+            // console.log('OK')
+          })
+          .onCancel(() => {
+            // console.log('Cancel')
+          })
+          .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+          });
+        return;
+      }
       this.setCurrentMeeting(this.selected);
       LocalStorage.set("currentMeeting", this.selected);
-      //開啟新視窗
-      let routeUrl = this.$router.resolve({
-        path: "/ImportantCase",
-      });
-      if (this.selected != "") {
-        // openURL(routeUrl.href, "_blank");
-        window.open(routeUrl.href, "_blank");
+      if (this.playModel === "play") {
+        this.$router.push("/PptPlay").catch((err) => {});
+      }      
+      if (this.playModel === "print") {
+        this.$router.push("/PptPrint").catch((err) => {});
       }
+
+      // console.log(this.currentMeeting)
+      // console.log(LocalStorage.getItem("currentMeeting"))
+
+      // //開啟新視窗
+      // let routeUrl = this.$router.resolve({
+      //   path: "/PptPlay",
+      // });
+      // window.open(routeUrl.href, "_blank");
     },
-    supMeetAdd() {
-      this.$q
-        .dialog({
-          title: "新增",
-          message: "輸入主管會報名稱？",
-          prompt: {
-            model: "18屆？次主管會報",
-            type: "text", // optional
-          },
-          cancel: true,
-          persistent: true,
+    RDcurrentMeeting() {
+      return dbFirestore
+        .collection("主管會報Setting")
+        .doc("currentMeeting")
+        .get()
+        .then((doc) => {
+          // console.log(doc.data())
+          return doc.data().currentMeeting;
         })
-        .onOk((data) => {
-          //資料庫新增
-          this.addSupervisorMeeting(data);
+        .catch((error) => {
+          // showErrorMessage(err.message)
+          console.error("主管會報Seting資料庫讀取失敗！", error);
         });
     },
-    supMeetDel() {
-      if (this.selected == "") {
-        return false;
-      }
-      this.$q
-        .dialog({
-          title: "刪除確認",
-          message: `要刪除${this.selected}嗎？`,
-          cancel: true,
-          persistent: true,
-        })
-        .onOk(() => {
-          this.$q
-            .dialog({
-              title: "警告",
-              message: "再次確認？",
-              cancel: true,
-            })
-            .onOk(() => {
-              console.log(">>>>", this.selected);
-              let id = this.selected;
-              this.selected = ""; //刪除後讓選擇欄位清空
-              this.deleteSupervisorMeeting(id);
-            });
-        });
-    },
-    pptPlay() {
-      this.setCurrentMeeting(this.selected);
-      LocalStorage.set("currentMeeting", this.selected);
-      //開啟新視窗
-      let routeUrl = this.$router.resolve({
-        path: "/PptPlay",
-      });
-      window.open(routeUrl.href, "_blank");
-      },
   }, //methods
 };
 </script>

@@ -1,8 +1,9 @@
 import Vue from 'vue'
-import { dbFirestore } from 'boot/firebase'
+import {firebaseAuth, dbFirestore } from 'boot/firebase'
 
 const state = {
     SupervisorMeeting: [],
+    CurrentMeeting: ""
 }
 
 const getters = {
@@ -29,6 +30,9 @@ const getters = {
 const mutations = {
     setSupervisorMeeting(state, value) {
         state.SupervisorMeeting = value
+    },
+    setCurrentMeeting(state, value) {
+        state.CurrentMeeting = value
     },
     setData(state, value) {
         state.data = value
@@ -92,11 +96,11 @@ const actions = {
     addSupervisorMeeting({ commit }, payload) { //建議跟mutations同名，較好記
         // let cId = uid() //quasar產生的 uid              
         dbFirestore
-            .collection("主管會報")            
+            .collection("主管會報")
             .doc(payload) //會議名稱就是ID
             .set({})
             .then(() => {
-                commit('addSupervisorMeeting',payload)
+                commit('addSupervisorMeeting', payload)
                 console.log("主管會報資料庫新增成功！");
             })
             .catch(error => {
@@ -104,7 +108,7 @@ const actions = {
             });
     },
     //更新
-    updateSupervisorMeeting({commit }, payload) {
+    updateSupervisorMeeting({ commit }, payload) {
         console.log(payload)
         dbFirestore
             .collection("主管會報")
@@ -120,7 +124,7 @@ const actions = {
 
     },
     // 刪除
-    deleteSupervisorMeeting({commit }, id) {
+    deleteSupervisorMeeting({ commit }, id) {
         dbFirestore
             .collection("主管會報")
             .doc(id)
@@ -143,12 +147,38 @@ const actions = {
             .get()
             .then(qs => {
                 qs.forEach(doc => {
-                    // console.log(doc)
+                    // console.log(doc.id)
                     commit('addSupervisorMeeting', doc.id)
                 })
             }).catch(err => {
                 // showErrorMessage(err.message)
                 console.error("主管會報資料庫讀取失敗！", error);
+            });
+    },
+    RDcurrentMeeting({ state, commit }) {
+      dbFirestore
+        .collection("主管會報Setting")
+        .doc("currentMeeting")
+        .get()
+        .then((doc) => {
+        //   console.log(doc.data().currentMeeting)
+        //   return doc.data().currentMeeting;
+          commit("setCurrentMeeting",doc.data().currentMeeting)
+        })
+        .catch((error) => {
+          // showErrorMessage(err.message)
+          console.error("主管會報Seting資料庫讀取失敗！", error);
+        });
+    },
+    auth({ commit, dispatch }) {
+        firebaseAuth
+            .signInWithEmailAndPassword("a000614@oa.pthg.gov.tw", "pthg@6390") //統一用這個帳號登入驗證
+            .then((response) => {
+                // console.log("login:", response);
+                console.log(firebaseAuth.currentUser.uid);
+                dispatch("ReadSupervisorMeeting")
+                dispatch("RDcurrentMeeting")
+                // this.$router.push("/").catch((err) => { });
             });
     }
 }
